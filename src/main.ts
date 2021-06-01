@@ -1,19 +1,56 @@
-import * as core from '@actions/core'
-import {wait} from './wait'
+import { getInput, setFailed } from '@actions/core';
+import { context, getOctokit } from '@actions/github';
+
+const VALID_REACTIONS = [
+    '+1',
+    '-1',
+    'laugh',
+    'confused',
+    'heart',
+    'hooray',
+    'rocket',
+    'eyes',
+];
 
 async function run(): Promise<void> {
-  try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_RUNNER_DEBUG` to true
+    try {
+        const token = getInput('token', { required: true });
+        const commentId = getInput('commentId') ?? context.payload?.comment?.id;
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+        if (!commentId) {
+            setFailed(
+                'No commentId was provided and this is not a comment related event.'
+            );
+        }
 
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
-    core.setFailed(error.message)
-  }
+        const reaction = (getInput('reaction') ?? '+1') as
+            | '+1'
+            | '-1'
+            | 'laugh'
+            | 'confused'
+            | 'heart'
+            | 'hooray'
+            | 'rocket'
+            | 'eyes';
+
+        if (!VALID_REACTIONS.includes(reaction)) {
+            setFailed(
+                `Invalid reaction provided: ${reaction}, valid reactions: ${VALID_REACTIONS.join(
+                    ','
+                )}`
+            );
+        }
+
+        const octokit = getOctokit(token);
+
+        await octokit.rest.reactions.createForIssueComment({
+            ...context.repo,
+            comment_id: Number(commentId),
+            content: reaction,
+        });
+    } catch (error) {
+        setFailed(error.message);
+    }
 }
 
-run()
+run();
