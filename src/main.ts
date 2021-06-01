@@ -1,5 +1,9 @@
-import { getInput, setFailed } from '@actions/core';
+import { getInput, info, setFailed } from '@actions/core';
 import { context, getOctokit } from '@actions/github';
+import {
+    IssueCommentCreatedEvent,
+    IssueCommentEditedEvent,
+} from '@octokit/webhooks-definitions/schema';
 
 const VALID_REACTIONS = [
     '+1',
@@ -15,7 +19,17 @@ const VALID_REACTIONS = [
 async function run(): Promise<void> {
     try {
         const token = getInput('token', { required: true });
-        const commentId = getInput('commentId') ?? context.payload?.comment?.id;
+
+        const commentIdInput = getInput('commentId');
+        const event = context.payload as
+            | IssueCommentCreatedEvent
+            | IssueCommentEditedEvent;
+        info(`Event: ${JSON.stringify(event)}`);
+        const contextCommentId = event?.comment?.id;
+        const commentId = commentIdInput ?? contextCommentId;
+        info(
+            `Comment ID is ${commentId} based on input of ${commentIdInput} and context of ${contextCommentId}`
+        );
 
         if (!commentId) {
             setFailed(
