@@ -36,9 +36,10 @@ function run() {
             const token = core_1.getInput('token', { required: true });
             const commentIdInput = core_1.getInput('commentId');
             const event = github_1.context.payload;
-            core_1.info(`Event: ${JSON.stringify(event)}`);
             const contextCommentId = (_a = event === null || event === void 0 ? void 0 : event.comment) === null || _a === void 0 ? void 0 : _a.id;
-            const commentId = commentIdInput !== null && commentIdInput !== void 0 ? commentIdInput : contextCommentId;
+            const commentId = commentIdInput && commentIdInput.length > 0
+                ? commentIdInput
+                : contextCommentId;
             core_1.info(`Comment ID is ${commentId} based on input of ${commentIdInput} and context of ${contextCommentId}`);
             if (!commentId) {
                 core_1.setFailed('No commentId was provided and this is not a comment related event.');

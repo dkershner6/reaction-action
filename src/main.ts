@@ -24,9 +24,12 @@ async function run(): Promise<void> {
         const event = context.payload as
             | IssueCommentCreatedEvent
             | IssueCommentEditedEvent;
-        info(`Event: ${JSON.stringify(event)}`);
+
         const contextCommentId = event?.comment?.id;
-        const commentId = commentIdInput ?? contextCommentId;
+        const commentId =
+            commentIdInput && commentIdInput.length > 0
+                ? commentIdInput
+                : contextCommentId;
         info(
             `Comment ID is ${commentId} based on input of ${commentIdInput} and context of ${contextCommentId}`
         );
