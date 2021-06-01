@@ -30,15 +30,20 @@ const VALID_REACTIONS = [
     'eyes',
 ];
 function run() {
-    var _a, _b, _c, _d;
+    var _a, _b;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const token = core_1.getInput('token', { required: true });
-            const commentId = (_a = core_1.getInput('commentId')) !== null && _a !== void 0 ? _a : (_c = (_b = github_1.context.payload) === null || _b === void 0 ? void 0 : _b.comment) === null || _c === void 0 ? void 0 : _c.id;
+            const commentIdInput = core_1.getInput('commentId');
+            const event = github_1.context.payload;
+            core_1.info(`Event: ${JSON.stringify(event)}`);
+            const contextCommentId = (_a = event === null || event === void 0 ? void 0 : event.comment) === null || _a === void 0 ? void 0 : _a.id;
+            const commentId = commentIdInput !== null && commentIdInput !== void 0 ? commentIdInput : contextCommentId;
+            core_1.info(`Comment ID is ${commentId} based on input of ${commentIdInput} and context of ${contextCommentId}`);
             if (!commentId) {
                 core_1.setFailed('No commentId was provided and this is not a comment related event.');
             }
-            const reaction = ((_d = core_1.getInput('reaction')) !== null && _d !== void 0 ? _d : '+1');
+            const reaction = ((_b = core_1.getInput('reaction')) !== null && _b !== void 0 ? _b : '+1');
             if (!VALID_REACTIONS.includes(reaction)) {
                 core_1.setFailed(`Invalid reaction provided: ${reaction}, valid reactions: ${VALID_REACTIONS.join(',')}`);
             }
