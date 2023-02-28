@@ -13,7 +13,7 @@ inputs:
     description: 'Must be a valid reaction type: https://docs.github.com/en/rest/reference/reactions#reaction-types'
     default: '+1'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: alert-octagon
