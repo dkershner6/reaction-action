@@ -6,7 +6,7 @@ import {
 } from "projen-github-action-typescript";
 
 const project = new GitHubActionTypeScriptProject({
-  packageManager: NodePackageManager.NPM,
+  packageManager: NodePackageManager.PNPM,
   minNodeVersion: "20.10.0",
 
   majorVersion: 2,
