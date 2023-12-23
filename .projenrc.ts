@@ -1,3 +1,4 @@
+import { JobPermission } from "projen/lib/github/workflows-model";
 import { NodePackageManager } from "projen/lib/javascript";
 import {
   GitHubActionTypeScriptProject,
@@ -54,5 +55,54 @@ const project = new GitHubActionTypeScriptProject({
     allowedUsernames: ["dkershner6"],
   },
 });
+
+const mainVersionTagWorkflow = project.github?.addWorkflow(
+  "Update Main Version Tag",
+);
+if (mainVersionTagWorkflow) {
+  mainVersionTagWorkflow.on({
+    workflowDispatch: {
+      inputs: {
+        target: {
+          description: "The target tag to update the main tag to",
+          required: true,
+        },
+        mainVersion: {
+          type: "choice",
+          description: "The main version to update",
+          options: ["v2"],
+        },
+      },
+    },
+  });
+
+  mainVersionTagWorkflow.addJob("tag", {
+    runsOn: ["ubuntu-latest"],
+    permissions: {
+      contents: JobPermission.READ,
+    },
+    steps: [
+      {
+        name: "Checkout",
+        uses: "actions/checkout@v2",
+        with: {
+          "fetch-depth": 0,
+        },
+      },
+      {
+        name: "Git config",
+        run: "git config user.name github-actions && git config user.email github-actions@github.com",
+      },
+      {
+        name: "Tag New Target",
+        run: "git tag -f ${{ github.event.inputs.major_version }} ${{ github.event.inputs.target }}",
+      },
+      {
+        name: "Push Tag",
+        run: "git push origin ${{ github.event.inputs.major_version }} --force",
+      },
+    ],
+  });
+}
 
 project.synth();
