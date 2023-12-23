@@ -6,8 +6,11 @@ import {
 
 const project = new GitHubActionTypeScriptProject({
   packageManager: NodePackageManager.PNPM,
-  majorVersion: 1,
+  minNodeVersion: "20.10.0",
+
+  majorVersion: 2,
   defaultReleaseBranch: "main",
+
   devDeps: ["projen-github-action-typescript"],
   name: "reaction-action",
   projenrcTs: true,

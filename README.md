@@ -6,7 +6,7 @@ React to any comment with the GitHub Reaction types.
 
 ```yaml
 - name: React to comment
-  uses: dkershner6/reaction-action@v1
+  uses: dkershner6/reaction-action@latest # You can also use a specific version, e.g. v2.0.0
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     commentId: 1234 # Optional if the trigger is a comment. Use another action to find this otherwise.
