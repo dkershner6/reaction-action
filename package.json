@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
-    "@types/node": "^18",
+    "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
     "@vercel/ncc": "^0.38.1",
@@ -49,6 +49,9 @@
     "@octokit/webhooks-types": "^7.3.1"
   },
   "pnpm": {},
+  "engines": {
+    "node": ">= 20.10.0"
+  },
   "main": "lib/index.js",
   "license": "Apache-2.0",
   "version": "0.0.0",

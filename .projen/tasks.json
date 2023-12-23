@@ -156,7 +156,7 @@
       "description": "Prepare a release from \"main\" branch",
       "env": {
         "RELEASE": "true",
-        "MAJOR": "1"
+        "MAJOR": "2"
       },
       "steps": [
         {
@@ -181,7 +181,7 @@
       "description": "Run tests",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --updateSnapshot",
+          "exec": "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot",
           "receiveArgs": true
         },
         {
