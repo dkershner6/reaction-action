@@ -1,14 +1,17 @@
+import { JobPermission } from "projen/lib/github/workflows-model";
 import { NodePackageManager } from "projen/lib/javascript";
 import {
   GitHubActionTypeScriptProject,
   RunsUsing,
 } from "projen-github-action-typescript";
 
+const MAJOR_VERSION = 2;
+
 const project = new GitHubActionTypeScriptProject({
   packageManager: NodePackageManager.PNPM,
   minNodeVersion: "20.10.0",
 
-  majorVersion: 2,
+  majorVersion: MAJOR_VERSION,
   defaultReleaseBranch: "main",
 
   devDeps: ["projen-github-action-typescript"],
@@ -53,6 +56,33 @@ const project = new GitHubActionTypeScriptProject({
   autoApproveOptions: {
     allowedUsernames: ["dkershner6"],
   },
+
+  sampleCode: false,
+  docgen: true,
 });
+
+const releaseWorkflow = project.github?.tryFindWorkflow("release");
+if (releaseWorkflow) {
+  releaseWorkflow.addJob("major-release", {
+    runsOn: ["ubuntu-latest"],
+    needs: ["release_github"],
+    permissions: {
+      contents: JobPermission.WRITE,
+    },
+    steps: [
+      {
+        uses: "actions/checkout@v3",
+      },
+      {
+        uses: "ncipollo/release-action@v1",
+        with: {
+          generateReleaseNotes: true,
+          tag: `v${MAJOR_VERSION}`,
+          token: "${{ secrets.GITHUB_TOKEN }}",
+        },
+      },
+    ],
+  });
+}
 
 project.synth();
