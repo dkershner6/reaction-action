@@ -76,6 +76,7 @@ if (releaseWorkflow) {
       {
         uses: "ncipollo/release-action@v1",
         with: {
+          allowUpdates: true,
           generateReleaseNotes: true,
           tag: `v${MAJOR_VERSION}`,
           token: "${{ secrets.GITHUB_TOKEN }}",
