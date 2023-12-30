@@ -49,6 +49,18 @@ jobs:
         with:
           name: build-artifact
           path: dist
+  major-release:
+    needs: release_github
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          tag: v2
+          token: ${{ secrets.GITHUB_TOKEN }}
   release_github:
     name: Publish to GitHub Releases
     needs: release
