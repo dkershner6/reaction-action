@@ -72,6 +72,16 @@ if (releaseWorkflow) {
     steps: [
       {
         uses: "actions/checkout@v3",
+        with: {
+          "fetch-depth": 0,
+        },
+      },
+      {
+        uses: "rickstaa/action-create-tag@v1",
+        with: {
+          force_push_tag: true,
+          tag: `v${MAJOR_VERSION}`,
+        },
       },
       {
         uses: "ncipollo/release-action@v1",
