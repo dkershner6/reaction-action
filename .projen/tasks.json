@@ -78,7 +78,7 @@
       "description": "Only compile",
       "steps": [
         {
-          "exec": "tsc --build"
+          "exec": "tsc --build tsconfig.publish.json"
         }
       ]
     },
@@ -87,7 +87,7 @@
       "description": "Synthesize project files",
       "steps": [
         {
-          "exec": "ts-node --project tsconfig.dev.json .projenrc.ts"
+          "exec": "ts-node --project tsconfig.json .projenrc.ts"
         }
       ]
     },
@@ -136,6 +136,15 @@
       "steps": [
         {
           "exec": "pnpm i --frozen-lockfile"
+        }
+      ]
+    },
+    "lint": {
+      "name": "lint",
+      "description": "Alternate lint command",
+      "steps": [
+        {
+          "spawn": "eslint"
         }
       ]
     },
@@ -212,6 +221,14 @@
         }
       ]
     },
+    "type-check": {
+      "name": "type-check",
+      "steps": [
+        {
+          "exec": "tsc --noEmit"
+        }
+      ]
+    },
     "unbump": {
       "name": "unbump",
       "description": "Restores version to 0.0.0",
@@ -236,13 +253,13 @@
       },
       "steps": [
         {
-          "exec": "pnpx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,@vercel/ncc,constructs,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,eslint,jest,jest-junit,prettier,projen,projen-github-action-typescript,standard-version,ts-jest,ts-node,typedoc,typescript,@actions/core,@actions/github,@octokit/webhooks-types"
+          "exec": "pnpx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/jest,@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,@vercel/ncc,constructs,dkershner6-projen-github-actions,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-jest,eslint-plugin-prettier,eslint-plugin-sonarjs,eslint,jest,jest-junit,prettier,projen,projen-github-action-typescript,standard-version,ts-jest,ts-node,typedoc,typescript,@actions/core,@actions/github,@octokit/webhooks-types"
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"
         },
         {
-          "exec": "pnpm update @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser @vercel/ncc constructs eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint jest jest-junit prettier projen projen-github-action-typescript standard-version ts-jest ts-node typedoc typescript @actions/core @actions/github @octokit/webhooks-types"
+          "exec": "pnpm update @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser @vercel/ncc constructs dkershner6-projen-github-actions eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-jest eslint-plugin-prettier eslint-plugin-sonarjs eslint jest jest-junit prettier projen projen-github-action-typescript standard-version ts-jest ts-node typedoc typescript @actions/core @actions/github @octokit/webhooks-types"
         },
         {
           "exec": "npx projen"

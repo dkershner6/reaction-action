@@ -6,7 +6,7 @@
     },
     {
       "name": "@types/node",
-      "version": "^20",
+      "version": "^18",
       "type": "build"
     },
     {
@@ -29,6 +29,10 @@
       "type": "build"
     },
     {
+      "name": "dkershner6-projen-github-actions",
+      "type": "build"
+    },
+    {
       "name": "eslint-config-prettier",
       "type": "build"
     },
@@ -41,7 +45,15 @@
       "type": "build"
     },
     {
+      "name": "eslint-plugin-jest",
+      "type": "build"
+    },
+    {
       "name": "eslint-plugin-prettier",
+      "type": "build"
+    },
+    {
+      "name": "eslint-plugin-sonarjs",
       "type": "build"
     },
     {

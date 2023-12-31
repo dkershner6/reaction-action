@@ -44,8 +44,8 @@ junit.xml
 !/.prettierrc.json
 !/.npmrc
 !/test/
+!/tsconfig.publish.json
 !/tsconfig.json
-!/tsconfig.dev.json
 !/src/
 /lib
 !/.eslintrc.json
