@@ -27,7 +27,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2.2.4
         with:
-          version: "7"
+          version: "8"
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -56,6 +56,12 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          force_push_tag: true
+          tag: v2
       - uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
