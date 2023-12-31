@@ -46,9 +46,7 @@ const project = new Node20GitHubActionTypescriptProject({
         },
     },
 
-    deps: [
-        "@octokit/webhooks-types",
-    ],
+    deps: ["@octokit/webhooks-types"],
 
     autoApproveOptions: {
         allowedUsernames: ["dkershner6"],
