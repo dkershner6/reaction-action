@@ -6,12 +6,19 @@ React to any comment with the GitHub Reaction types.
 
 ```yaml
 - name: React to comment
-  uses: dkershner6/reaction-action@v2 # You can also use a specific version, e.g. v2.0.0
+  uses: dkershner6/reaction-action@v3 # You can also use a specific version, e.g. v3.0.0
   with:
     token: ${{ secrets.GITHUB_TOKEN }}
     commentId: 1234 # Optional if the trigger is a comment. Use another action to find this otherwise.
     reaction: "hooray" # Optional, defaults to +1
 ```
+
+## Migration from v2
+
+Version 3 updates the GitHub Actions runtime from Node 20 to Node 24. This is a breaking change required by [GitHub's Node 20 deprecation](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/).
+
+- **v3** — runs on `node24` (recommended)
+- **v2** — runs on `node20` (deprecated; pin `@v2` only if you must stay on Node 20 temporarily)
 
 ## Valid reactions (if this is incomplete, please open an issue)
 
