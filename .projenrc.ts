@@ -1,11 +1,14 @@
 import { Node20GitHubActionTypescriptProject } from "dkershner6-projen-github-actions";
 import { RunsUsing } from "projen-github-action-typescript";
 
-const MAJOR_VERSION = 2;
+const MAJOR_VERSION = 3;
 
 const project = new Node20GitHubActionTypescriptProject({
     majorVersion: MAJOR_VERSION,
     defaultReleaseBranch: "main",
+    minNodeVersion: "24.0.0",
+    maxNodeVersion: "24.0.0",
+    workflowNodeVersion: "24.0.0",
 
     devDeps: [
         "dkershner6-projen-github-actions",
@@ -36,7 +39,8 @@ const project = new Node20GitHubActionTypescriptProject({
             },
         },
         runs: {
-            using: RunsUsing.NODE_20,
+            // NODE_24 not yet in projen-github-action-typescript RunsUsing enum
+            using: "node24" as RunsUsing,
             main: "dist/index.js",
         },
         branding: {

@@ -32,20 +32,30 @@
         "CHANGELOG": "dist/changelog.md",
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
-        "RELEASE_TAG_PREFIX": ""
+        "RELEASE_TAG_PREFIX": "",
+        "BUMP_PACKAGE": "commit-and-tag-version@^12"
       },
       "steps": [
         {
           "builtin": "release/bump-version"
         }
       ],
-      "condition": "! git log --oneline -1 | grep -q \"chore(release):\""
+      "condition": "git log --oneline -1 | grep -qv \"chore(release):\""
     },
     "ci": {
       "name": "ci",
       "steps": [
         {
           "spawn": "install:ci"
+        }
+      ]
+    },
+    "clean-compile": {
+      "name": "clean-compile",
+      "description": "Clean up the compiled output",
+      "steps": [
+        {
+          "exec": "rm -rf lib && rm -rf dist"
         }
       ]
     },
@@ -104,7 +114,20 @@
       "description": "Generate TypeScript API reference docs/",
       "steps": [
         {
+          "spawn": "docgen:remove"
+        },
+        {
           "exec": "typedoc src --disableSources --out docs/"
+        }
+      ],
+      "condition": "if [ \"$RELEASE\" = \"true\" ] ; then exit 1 ; fi"
+    },
+    "docgen:remove": {
+      "name": "docgen:remove",
+      "description": "Remove the docgen directory",
+      "steps": [
+        {
+          "exec": "rm -rf docs/"
         }
       ]
     },
@@ -126,11 +149,10 @@
       "steps": [
         {
           "exec": "eslint --ext .ts,.tsx --fix --no-error-on-unmatched-pattern $@ src test build-tools projenrc .projenrc.ts",
-          "args": [
-            "--max-warnings=0"
-          ]
+          "receiveArgs": true
         }
-      ]
+      ],
+      "condition": "if [ \"$RELEASE\" = \"true\" ] ; then exit 1 ; fi"
     },
     "i": {
       "name": "i",
@@ -165,7 +187,8 @@
         {
           "spawn": "eslint"
         }
-      ]
+      ],
+      "condition": "if [ \"$RELEASE\" = \"true\" ] ; then exit 1 ; fi"
     },
     "package": {
       "name": "package",
@@ -198,7 +221,7 @@
       "description": "Prepare a release from \"main\" branch",
       "env": {
         "RELEASE": "true",
-        "MAJOR": "2"
+        "MAJOR": "3"
       },
       "steps": [
         {
@@ -237,10 +260,11 @@
       "name": "test-unit",
       "steps": [
         {
-          "exec": "jest --passWithNoTests --coverageProvider=v8 --updateSnapshot",
+          "exec": "jest --passWithNoTests --updateSnapshot",
           "receiveArgs": true
         }
-      ]
+      ],
+      "condition": "if [ \"$RELEASE\" = \"true\" ] ; then exit 1 ; fi"
     },
     "test:watch": {
       "name": "test:watch",
@@ -267,7 +291,8 @@
         "CHANGELOG": "dist/changelog.md",
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
-        "RELEASE_TAG_PREFIX": ""
+        "RELEASE_TAG_PREFIX": "",
+        "BUMP_PACKAGE": "commit-and-tag-version@^12"
       },
       "steps": [
         {
@@ -283,19 +308,29 @@
       },
       "steps": [
         {
-          "exec": "pnpx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/clone-deep,@types/jest,@types/node,@typescript-eslint/eslint-plugin,@typescript-eslint/parser,@vercel/ncc,clone-deep,constructs,dkershner6-projen-github-actions,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-jest,eslint-plugin-prettier,eslint-plugin-sonarjs,eslint,jest,jest-junit,prettier,projen,projen-github-action-typescript,standard-version,ts-jest,ts-node,typedoc,typescript,@actions/core,@actions/github,@octokit/webhooks-types"
+          "exec": "pnpm dlx npm-check-updates@16 --upgrade --target=minor --peer --dep=dev,peer,prod,optional --filter=@types/clone-deep,@types/jest,@vercel/ncc,clone-deep,dkershner6-projen-github-actions,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-jest,eslint-plugin-prettier,eslint-plugin-sonarjs,jest,prettier,projen-github-action-typescript,ts-jest,ts-node,typedoc,typescript,@actions/core,@actions/github,@octokit/webhooks-types"
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"
         },
         {
-          "exec": "pnpm update @types/clone-deep @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser @vercel/ncc clone-deep constructs dkershner6-projen-github-actions eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-jest eslint-plugin-prettier eslint-plugin-sonarjs eslint jest jest-junit prettier projen projen-github-action-typescript standard-version ts-jest ts-node typedoc typescript @actions/core @actions/github @octokit/webhooks-types"
+          "exec": "pnpm update @types/clone-deep @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser @vercel/ncc clone-deep commit-and-tag-version constructs dkershner6-projen-github-actions eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-jest eslint-plugin-prettier eslint-plugin-sonarjs eslint jest jest-junit prettier projen-github-action-typescript projen ts-jest ts-node typedoc typescript @actions/core @actions/github @octokit/webhooks-types"
         },
         {
           "exec": "npx projen"
         },
         {
           "spawn": "post-upgrade"
+        }
+      ]
+    },
+    "upgrade:package": {
+      "name": "upgrade:package",
+      "description": "Upgrade a single package (or otherwise use NPM Check Updates). This should be used as 'npx projen upgrade:package -- <package-name>'",
+      "steps": [
+        {
+          "exec": "pnpm dlx npm-check-updates@16 --upgrade",
+          "receiveArgs": true
         }
       ]
     },

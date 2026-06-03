@@ -3,7 +3,7 @@
 name: Comment Reaction
 description: React to a comment within a GitHub Issue or Pull Request
 runs:
-  using: node20
+  using: node24
   main: dist/index.js
 inputs:
   token:
