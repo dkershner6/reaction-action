@@ -22,8 +22,7 @@ async function run(): Promise<void> {
 
         const commentIdInput = getInput("commentId");
         const event = context.payload as
-            | IssueCommentCreatedEvent
-            | IssueCommentEditedEvent;
+            IssueCommentCreatedEvent | IssueCommentEditedEvent;
 
         const contextCommentId = event?.comment?.id;
         const commentId =
